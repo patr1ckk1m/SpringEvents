@@ -72,8 +72,10 @@ public class UserController {
 	}
 	
 	@RequestMapping("/events/{id}")
-	public String specificEvent(@PathVariable("id") Long id, Model model, @ModelAttribute("message") Message message, BindingResult result, @ModelAttribute("event") Event event) {
+	public String specificEvent(@PathVariable("id") Long id, Model model, @ModelAttribute("message") Message message, BindingResult result, @ModelAttribute("event") Event event, Principal principal) {
+		String email = principal.getName();
 		model.addAttribute("event", userService.findOneEvent(id));
+		model.addAttribute("currentUser", userService.findByEmail(email));
 		return "oneEvent.jsp";
 	}
 	
@@ -104,6 +106,17 @@ public class UserController {
 		userService.editEvent(id, newEvent);
 		return "redirect:/events";
 	}
+
+	@RequestMapping("/join/{id}")
+	public String joinEvent(@PathVariable(value="id") Long id, Principal principal) {
+		userService.joinEvent(id, userService.findByEmail(principal.getName()).getId());
+		return "redirect:/events";
+	}
 	
+	@RequestMapping("/cancel/{id}")
+	public String cancelEvent(@PathVariable(value="id") Long id, Principal principal) {
+		userService.cancelEvent(id, userService.findByEmail(principal.getName()).getId());
+		return "redirect:/events";
+	}
 	
 }

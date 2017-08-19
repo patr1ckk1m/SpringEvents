@@ -10,15 +10,38 @@
 <title>${event.name }</title>
 </head>
 <body>
+	<a href="/events">Back to Events</a>
 	<h1>${event.name }</h1>
 	<p>Host: ${event.host.firstname }</p>
 	<p>Date: ${event.date }</p>
 	<p>Location: ${event.location }</p>
-	<p>People who are attending this event: </p>
+	<p>People who are attending this event: ${event.users.size() }</p>
+	
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Location</th>
+		</tr>
+		<c:forEach var = "user" items = "${event.users }">
+			<tr>
+				<td>${user.firstname } ${user.lastname }</td>
+				<td>${user.location }</td>
+			</tr>
+		</c:forEach>
+	</table>
 	
 	<h1>Message Wall</h1>
-	<c:forEach var = "msg" items = "${event.messages }">
+	<c:forEach var = "message" items = "${event.messages }">
+		<p>${message.name } says: ${message.userMessage }</p>
 	</c:forEach>
+	
+	<form:form method = "POST" action="/message" modelAttribute = "message">
+		<p>Add Comment: </p>
+		<form:textarea path = "userMessage" rows = "2" cols = "20"/>
+		<form:hidden path = "name" value = "${currentUser.firstname } ${currentUser.lastname }"/>
+		<form:hidden path = "event" value = "${event.id }"/>
+		<input type = "submit" value = "Submit">
+	</form:form>
 	
 </body>
 </html>

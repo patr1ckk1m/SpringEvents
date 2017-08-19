@@ -9,10 +9,12 @@
 <title>Edit</title>
 </head>
 <body>
-<form id="logoutForm" method="POST" action="/logout">
+	<form id="logoutForm" method="POST" action="/logout">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <input type="submit" value="Logout!" />
-    </form><a href="/events">Back to Events</a>
+    </form>
+    <a href="/events">Back to Events</a>
+    
 	<h1>${event.name }</h1>
 	<h3>Edit Event</h3>
 	<form:form method="POST" action="/event/${event.id}/edit" modelAttribute="event">

@@ -37,11 +37,43 @@
 				<c:if test = "${event.host.id == currentUser.id }">
 					<th><a href = "/events/${event.id }/edit">Edit</a>  <a href = "/delete/${event.id }">Delete</a></th>
 				</c:if>
-				<c:if test = "${event.host.id != currentUser.id }">
+				<c:if test="${event.host.id != currentUser.id }">
+    				<c:if test="${event.users.contains(currentUser) }">
+						<td>Joining <a href="/cancel/${event.id}">Cancel</a></td>
+					</c:if>
+					<c:if test="${!event.users.contains(currentUser) }">
 						<td><a href="/join/${event.id}">Join</a></td>
-				</c:if>
+					</c:if>
+    			</c:if>
 			</tr>
 		</c:if>
+		</c:forEach>
+	</table>
+	
+	<h3>Here are some of the events in other states: </h3>
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Date</th>
+			<th>Location</th>
+			<th>Host</th>
+			<th>Action</th>
+		</tr>
+		<c:forEach var = "event" items = "${events }">
+			<c:if test = "${!currentUser.location.equals(event.location) }">
+				<tr>
+					<td><a href = "/events/${event.id}">${event.name }</a></td>
+					<th><fmt:formatDate dateStyle = "long" type = "date" value = "${event.date }"/></th>
+					<th>${event.location }</th>
+					<th>${event.host.firstname }</th>
+					<c:if test="${event.users.contains(currentUser) }">
+						<td>Joining <a href="/cancel/${event.id}">Cancel</a></td>
+					</c:if>
+					<c:if test="${!event.users.contains(currentUser) }">
+						<td><a href="/join/${event.id}">Join</a></td>
+					</c:if>
+				</tr>
+			</c:if>	
 		</c:forEach>
 	</table>
 	

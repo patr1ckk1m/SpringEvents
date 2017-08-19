@@ -68,4 +68,21 @@ public class UserService {
 	public void saveMessage(Message message) {
 		messageRepo.save(message);
 	}
+	
+	public void joinEvent(Long id, Long userid) {
+		Event event = eventRepo.findOne(id);
+		User user = userRepo.findOne(userid);
+		event.getUsers().add(user);
+		eventRepo.save(event);
+
+	}
+	
+	public void cancelEvent(Long id, Long userid) {
+		Event event = eventRepo.findOne(id);
+		User user = userRepo.findOne(userid);
+		event.getUsers().remove(user);
+		eventRepo.save(event);
+		user.getEvents().remove(event);
+		userRepo.save(user);
+	}
 }

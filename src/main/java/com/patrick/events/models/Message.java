@@ -41,11 +41,11 @@ public class Message {
 		this.name = name;
 	}
 
-	public String getMsg() {
+	public String getUserMessage() {
 		return userMessage;
 	}
 
-	public void setMsg(String userMessage) {
+	public void setUserMessage(String userMessage) {
 		this.userMessage = userMessage;
 	}
 	
