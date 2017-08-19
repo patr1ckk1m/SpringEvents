@@ -1,71 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Events</title>
+<title>Edit</title>
 </head>
 <body>
-    <form id="logoutForm" method="POST" action="/logout">
+<form id="logoutForm" method="POST" action="/logout">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <input type="submit" value="Logout!" />
-    </form>
-
-
-	<h1>Welcome ${currentUser.firstname }</h1>
-	<h3>Here are some of the events in your state</h3>
-	
-	<table>
-		<tr>
-			<th>Name</th>
-			<th>Date</th>
-			<th>Location</th>
-			<th>Host</th>
-			<th>Action/Status</th>
-		</tr>
-		<c:forEach var = "event" items = "${events }">
-		<c:if test= "${currentUser.location.equals(event.location) }">
-			<tr>
-				<th><a href = "/events/${event.id}">${event.name }</a></th>
-				<th><fmt:formatDate dateStyle = "long" type = "date" value = "${event.date }"/></th>
-				<th>${event.location }</th>
-				<th>${event.host.firstname }</th>
-				<c:if test = "${event.host.id == currentUser.id }">
-					<th><a href = "/events/${event.id }/edit">Edit</a>  <a href = "/delete/${event.id }">Delete</a></th>
-				</c:if>
-				<c:if test = "${event.host.id != currentUser.id }">
-						<td><a href="/join/${event.id}">Join</a></td>
-				</c:if>
-			</tr>
-		</c:if>
-		</c:forEach>
-	</table>
-	
-	
-	<form:form method="POST" action="/addevent" modelAttribute="event">
-		<form:hidden path="host" value = "${currentUser.id }"/>
-		<h1>New Event</h1>
-		
-		<p>
-		    <form:label path="name">Name:
-		    <form:errors path="name"/>
-			 <form:input path="name"/>
-		    </form:label>
-	    </p>
-	    
-	    <p>
-		    <form:label path="date">Date:
-		    <form:errors path="date"/>
-		    <form:input path="date" type="date"/></form:label>
-		</p>
-		
-       	<p>
-       	<form:label path = "location">Location:</form:label>
-       	<input type = "text" placeholder="City">
+    </form><a href="/events">Back to Events</a>
+	<h1>${event.name }</h1>
+	<h3>Edit Event</h3>
+	<form:form method="POST" action="/event/${event.id}/edit" modelAttribute="event">
+    		<form:hidden path="host" value="${currentUser.id}"/>
+    		<p>
+            <form:label path="name">Name:</form:label>
+            <form:input path="name" value="${event.name }"/>
+        </p>
+        <p>
+            <form:label path="date">Date:</form:label>
+            <form:input path="date" type="date"/>
+        </p>
+        <p>
+        	<form:label path = "location">Location:</form:label>
+        	<input type = "text" placeholder = "City">
         	<select name = "location">
         		<option value="AL">Alabama</option>
 				<option value="AK">Alaska</option>
@@ -119,9 +81,8 @@
 				<option value="WI">Wisconsin</option>
 				<option value="WY">Wyoming</option>
         	</select>
-       	</p>
-	    
-	    <input type="submit" value="Create"/>
-	</form:form>
+        </p>
+        <input type="submit" value="Edit"/>
+    </form:form>
 </body>
 </html>

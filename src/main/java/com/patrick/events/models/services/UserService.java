@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.patrick.events.models.Event;
+import com.patrick.events.models.Message;
 import com.patrick.events.models.User;
 import com.patrick.events.repositories.EventRepo;
 import com.patrick.events.repositories.MessageRepo;
@@ -54,5 +55,17 @@ public class UserService {
 	public void deleteEvent(Long id) {
 		messageRepo.delete(messageRepo.findAllByEvent_id(id));
 		eventRepo.delete(id);
+	}
+	
+	public void editEvent(Long id, Event newEvent) {
+		Event event = eventRepo.findOne(id);
+		event.setName(newEvent.getName());
+		event.setDate(newEvent.getDate());
+		event.setLocation(newEvent.getLocation());
+		eventRepo.save(event);
+	}
+	
+	public void saveMessage(Message message) {
+		messageRepo.save(message);
 	}
 }

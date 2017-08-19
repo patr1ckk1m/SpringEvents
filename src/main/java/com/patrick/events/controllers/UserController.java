@@ -4,9 +4,8 @@ import java.security.Principal;
 
 import javax.validation.Valid;
 
-import org.mockito.exceptions.PrintableInvocation;
-import org.springframework.stereotype.Controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -66,6 +65,7 @@ public class UserController {
 	public String newEvent(@ModelAttribute("event") Event event, BindingResult result, Principal principal) {
 
 		System.out.println(event.getName());
+		
 		userService.saveEvent(event);
 		
 		return "redirect:/events";
@@ -73,8 +73,37 @@ public class UserController {
 	
 	@RequestMapping("/events/{id}")
 	public String specificEvent(@PathVariable("id") Long id, Model model, @ModelAttribute("message") Message message, BindingResult result, @ModelAttribute("event") Event event) {
-		System.out.println(event.getHost());
 		model.addAttribute("event", userService.findOneEvent(id));
 		return "oneEvent.jsp";
 	}
+	
+	@PostMapping("/message")
+	public String newMessage(@ModelAttribute("message") Message message, BindingResult result) {
+		userService.saveMessage(message);
+		return "redirect:/events/" + message.getEvent().getId();
+	}
+	
+	@RequestMapping("/delete/{id}")
+	public String deleteEvent(@PathVariable(value = "id") Long id) {
+		userService.deleteEvent(id);
+		return "redirect:/events";
+	}
+	
+	@RequestMapping("/events/{id}/edit")
+	public String editEvent(@PathVariable(value="id") Long id, Model model, @ModelAttribute("event") Event event, BindingResult result, Principal principal) {
+		String email = principal.getName();
+		if(userService.findByEmail(email).getId() != userService.findOneEvent(id).getHost().getId()) {
+			return "redirect:/events";
+		}
+		model.addAttribute("event", userService.findOneEvent(id));
+		return "edit.jsp";
+	}
+	
+	@PostMapping("/event/{id}/edit")
+	public String newEvent(@PathVariable(value="id") Long id, @ModelAttribute("event") Event newEvent, BindingResult result, Principal principal) {
+		userService.editEvent(id, newEvent);
+		return "redirect:/events";
+	}
+	
+	
 }
