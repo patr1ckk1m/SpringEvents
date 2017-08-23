@@ -119,4 +119,10 @@ public class UserController {
 		return "redirect:/events";
 	}
 	
+	@RequestMapping("/users/{id}")
+	public String specificUser(@PathVariable("id") Long id, Model model) {
+		model.addAttribute("user", userService.findOneUser(id));
+		return "oneUser.jsp";
+	}
+	
 }

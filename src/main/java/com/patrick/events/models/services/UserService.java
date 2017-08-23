@@ -1,5 +1,6 @@
 package com.patrick.events.models.services;
 
+
 import java.util.List;
 
 
@@ -50,6 +51,10 @@ public class UserService {
 	
 	public Event findOneEvent(Long id) {
 		return eventRepo.findOne(id);
+	}
+	
+	public User findOneUser(Long id) {
+		return userRepo.findOne(id);
 	}
 	
 	public void deleteEvent(Long id) {

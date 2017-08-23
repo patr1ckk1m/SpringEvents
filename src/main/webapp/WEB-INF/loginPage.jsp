@@ -31,9 +31,9 @@
         </p>
         
         <p>
-        	<form:label path = "location">Location:</form:label>
-        	<input type = "text">
-        	<select name = "location">
+            <form:label path="location">Location:</form:label>
+            <form:input path="location" class="shortinput"/>
+        	<form:select path = "state">
         		<option value="AL">Alabama</option>
 				<option value="AK">Alaska</option>
 				<option value="AZ">Arizona</option>
@@ -85,7 +85,7 @@
 				<option value="WV">West Virginia</option>
 				<option value="WI">Wisconsin</option>
 				<option value="WY">Wyoming</option>
-        	</select>
+        	</form:select>
  		</p>
         
         <p>

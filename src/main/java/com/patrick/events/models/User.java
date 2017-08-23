@@ -17,6 +17,7 @@ public class User {
     @Size(min=1, message="Last name must be at least 1 character")
     private String lastname;
     private String location;
+    private String state;
     private String email;
     @Size(min=9, message = "Pass must be greater than 9")
     private String password;
@@ -126,6 +127,14 @@ public class User {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+	
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
     
     @PrePersist

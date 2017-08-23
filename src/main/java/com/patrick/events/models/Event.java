@@ -1,6 +1,7 @@
 package com.patrick.events.models;
 
 
+
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,9 @@ public class Event {
 	    @GeneratedValue
 	    private Long id;
 	    private String name;
+	    private String state;
 	    private String location;
+	    private String description;
 	    @DateTimeFormat(pattern = "yyyy-MM-dd")
 	    private Date date;
 	    
@@ -88,12 +91,28 @@ public class Event {
 			this.location = location;
 		}
 		
+		public String getState() {
+			return state;
+		}
+
+		public void setState(String state) {
+			this.state = state;
+		}
+		
 		public List<User> getUsers(){
 			return users;
 		}
 		
 		public void setUsers(List<User> users) {
 			this.users = users;
+		}
+		
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		
+		public String getDescription() {
+			return description;
 		}
 		
 
