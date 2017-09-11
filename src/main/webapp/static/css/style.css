@@ -30,3 +30,24 @@ li a:hover {
 	margin-top: 10px;
 	margin-right: 10px;
 }
+
+.info{
+	width: 300px;
+	display:inline-block;
+	vertical-align: top;
+}
+
+.message{
+	width: 300px;
+	display:inline-block;
+}
+
+.box{
+	height: 300px;
+	width: 950px;
+	border: 1px solid black;
+	overflow: auto;
+}
+ #msgcontainer{
+ display:inline-block;
+ }

@@ -46,15 +46,14 @@ public class UserController {
 	public String registration(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
 		userValidator.validate(user, result);
 		if (result.hasErrors()) {
-			return "login.jsp";
+			return "redirect:/login";
 		}
-		
 		userService.saveUser(user);
 		return "redirect:/events";
 	}
 	
 	@RequestMapping(value = {"/", "/events"})
-	public String home(Principal principal, Model model, @Valid @ModelAttribute("event") Event event) {
+	public String home(Principal principal, Model model, @Valid @ModelAttribute("event") Event event, BindingResult result) {
 		String email = principal.getName();
 		model.addAttribute("currentUser", userService.findByEmail(email));
 		model.addAttribute("events", userService.allEvents());
@@ -63,8 +62,6 @@ public class UserController {
 	
 	@PostMapping("/addevent")
 	public String newEvent(@ModelAttribute("event") Event event, BindingResult result, Principal principal) {
-
-		System.out.println(event.getName());
 		
 		userService.saveEvent(event);
 		
@@ -73,9 +70,7 @@ public class UserController {
 	
 	@RequestMapping("/events/{id}")
 	public String specificEvent(@PathVariable("id") Long id, Model model, @ModelAttribute("message") Message message, BindingResult result, @ModelAttribute("event") Event event, Principal principal) {
-		String email = principal.getName();
 		model.addAttribute("event", userService.findOneEvent(id));
-		model.addAttribute("currentUser", userService.findByEmail(email));
 		return "oneEvent.jsp";
 	}
 	

@@ -21,13 +21,23 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Amatic SC", sans-serif}
     background-image: url("../img/event.jpg");
     min-height: 90%;
 }
+
+
+    .formcontainer input {
+        width: 100%;
+        clear: both;
+    }
+    
+    .formcontainer select {
+    width: 100%;
+    text-align: center;
+    }
 </style>
 </head>
 <body>
 <ul>
-  <li><a href="default.asp">Home</a></li>
-  <li><a href="news.asp">News</a></li>
-  <li><a href="contact.asp">Contact</a></li>
+  <li><a href="/events">Home</a></li>
+  <li><a href="#">Contact</a></li>
   <li style = "float:right" id = "logout">    
   	<form id="logoutForm" method="POST" action="/logout">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -43,11 +53,12 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Amatic SC", sans-serif}
   </div>
   <div class="w3-display-middle w3-center">
     <span class="w3-text-white w3-hide-small" style="font-size:100px">find<br>your next event</span>
-    <span class="w3-text-white w3-hide-large w3-hide-medium" style="font-size:60px"><b>thin<br>CRUST PIZZA</b></span>
-    <p><a href="#eventsnearby" class="w3-button w3-xxlarge w3-black">See events near ${currentUser.location }, ${currentUser.state }</a></p>
-    <p><a href="#menu" class="w3-button w3-xxlarge w3-black">See all events</a></p>
+
+    <p><a href="#menu" class="w3-button w3-xxlarge w3-black">See events near ${currentUser.location }, ${currentUser.state }</a></p>
   </div>
 </div>
+
+
 
 <div class="w3-container w3-black w3-padding-64 w3-xxlarge" id="menu">
   <div class="w3-content">
@@ -60,154 +71,98 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Amatic SC", sans-serif}
       <a href="javascript:void(0)" onclick="openMenu(event, 'Other');">
         <div class="w3-col s4 tablink w3-padding-large w3-hover-red">Other Events</div>
       </a>
-      <a href="javascript:void(0)" onclick="openMenu(event, 'Starter');">
-        <div class="w3-col s4 tablink w3-padding-large w3-hover-red">Starter</div>
+      <a href="javascript:void(0)" onclick="openMenu(event, 'Addnew');">
+        <div class="w3-col s4 tablink w3-padding-large w3-hover-red">Add Event</div>
       </a>
     </div>
+
+
 
     <div id="Nearby" class="w3-container menu w3-padding-32 w3-white">
     	<c:forEach var = "event" items = "${events }">
 			<c:if test= "${currentUser.state.equals(event.state) }">
-		      <h1><b><a href="/events/${event.id }" style = "color:black">${event.name }</a> &nbsp; <fmt:formatDate dateStyle = "long" type = "date" value = "${event.date }"/></b> <span class="w3-right w3-tag w3-dark-grey w3-round">Hosted by: <a href = "/users/${event.host.id}">${event.host.firstname }</a></span></h1>
-		      <p class="w3-text-grey">Fresh tomatoes, fresh mozzarella, fresh basil</p>
+		      <h1><b><a href="/events/${event.id }" style = "color:black">${event.name }</a> &nbsp; <fmt:formatDate dateStyle = "long" type = "date" value = "${event.date }"/></b> 
+		      <span class="w3-right w3-tag w3-dark-grey w3-round">
+		      		<c:if test = "${event.host.id == currentUser.id }">
+						<td><a href = "/events/${event.id }/edit">Edit</a>  <a href = "/delete/${event.id }">Delete</a></td>
+					</c:if>
+					<c:if test="${event.host.id != currentUser.id }">
+			      		<c:if test="${event.users.contains(currentUser) }">
+							<td>Going &nbsp; <a href="/cancel/${event.id}">Cancel</a></td>
+						</c:if>
+						<c:if test="${!event.users.contains(currentUser) }">
+							<td><a href="/join/${event.id}">Join</a></td>
+						</c:if>
+					</c:if>
+		      </span>
+		      </h1>
+		      <p class="w3-text-grey">Hosted by: <a href = "/users/${event.host.id}">${event.host.firstname }</a></p>
+		      <p class="w3-text-grey">${event.location }, ${event.state }</p>
+		      <p class="w3-text-grey">${event.description }</p>
 		      <hr>
 		   
           	</c:if>
     	</c:forEach>
     </div>
 
-
-
-
-
     <div id="Other" class="w3-container menu w3-padding-32 w3-white">
-    <c:forEach var="event" items="${events }">
+    	<c:forEach var="event" items="${events }">
     		<c:if test="${!currentUser.state.equals(event.state) }">
-      <h1><b>Lasagna</b> <span class="w3-tag w3-grey w3-round">Popular</span> <span class="w3-right w3-tag w3-dark-grey w3-round">$13.50</span></h1>
-      <p class="w3-text-grey">Special sauce, mozzarella, parmesan, ground beef</p>
+      			<h1><b><a href="/events/${event.id }" style = "color:black">${event.name }</a> &nbsp; <fmt:formatDate dateStyle = "long" type = "date" value = "${event.date }"/></b> 
+      			<span class="w3-right w3-tag w3-dark-grey w3-round">
+	      			<c:if test = "${event.host.id == currentUser.id }">
+						<td><a href = "/events/${event.id }/edit">Edit</a>  <a href = "/delete/${event.id }">Delete</a></td>
+					</c:if>
+					<c:if test="${event.host.id != currentUser.id }">
+			      		<c:if test="${event.users.contains(currentUser) }">
+							<td>Going &nbsp; <a href="/cancel/${event.id}">Cancel</a></td>
+						</c:if>
+						<c:if test="${!event.users.contains(currentUser) }">
+							<td><a href="/join/${event.id}">Join</a></td>
+						</c:if>
+					</c:if>
+      			</span>
+      			</h1>
+      		  <p class="w3-text-grey">Hosted by: <a href = "/users/${event.host.id}">${event.host.firstname }</a></p>
+		      <p class="w3-text-grey">${event.location }, ${event.state }</p>
+		      <p class="w3-text-grey">${event.description }</p>
       <hr>
-   
-      <h1><b>Ravioli</b> <span class="w3-right w3-tag w3-dark-grey w3-round">$14.50</span></h1>
-      <p class="w3-text-grey">Ravioli filled with cheese</p>
-      <hr>
-      
-      <h1><b>Spaghetti Classica</b> <span class="w3-right w3-tag w3-dark-grey w3-round">$11.00</span></h1>
-      <p class="w3-text-grey">Fresh tomatoes, onions, ground beef</p>
-      <hr>
-
-      <h1><b>Seafood pasta</b> <span class="w3-right w3-tag w3-dark-grey w3-round">$25.50</span></h1>
-      <p class="w3-text-grey">Salmon, shrimp, lobster, garlic</p>
       </c:if>
       </c:forEach>
     </div>
-
-
-
-
-
-
-    <div id="Starter" class="w3-container menu w3-padding-32 w3-white">
-      <h1><b>Today's Soup</b> <span class="w3-tag w3-grey w3-round">Seasonal</span><span class="w3-right w3-tag w3-dark-grey w3-round">$5.50</span></h1>
-      <p class="w3-text-grey">Ask the waiter</p>
-      <hr>
-   
-      <h1><b>Bruschetta</b> <span class="w3-right w3-tag w3-dark-grey w3-round">$8.50</span></h1>
-      <p class="w3-text-grey">Bread with pesto, tomatoes, onion, garlic</p>
-      <hr>
-      
-      <h1><b>Garlic bread</b> <span class="w3-right w3-tag w3-dark-grey w3-round">$9.50</span></h1>
-      <p class="w3-text-grey">Grilled ciabatta, garlic butter, onions</p>
-      <hr>
-      
-      <h1><b>Tomozzarella</b> <span class="w3-right w3-tag w3-dark-grey w3-round">$10.50</span></h1>
-      <p class="w3-text-grey">Tomatoes and mozzarella</p>
-    </div><br>
-
-  </div>
-</div>
-
-	<h3>Here are some of the events in your state</h3>
-	
-	<table>
-		<tr>
-			<th>Name</th>
-			<th>Date</th>
-			<th>Location</th>
-			<th>Host</th>
-			<th>Action/Status</th>
-		</tr>
-		<c:forEach var = "event" items = "${events }">
-		<c:if test= "${currentUser.state.equals(event.state) }">
-			<tr>
-				<td><a href = "/events/${event.id}">${event.name }</a></td>
-				<td><fmt:formatDate dateStyle = "long" type = "date" value = "${event.date }"/></td>
-				<td>${event.location }</th>
-				<td><a href = "/users/${event.host.id}">${event.host.firstname }</a></td>
-				<c:if test = "${event.host.id == currentUser.id }">
-					<td><a href = "/events/${event.id }/edit">Edit</a>  <a href = "/delete/${event.id }">Delete</a></td>
-				</c:if>
-				<c:if test="${event.host.id != currentUser.id }">
-    				<c:if test="${event.users.contains(currentUser) }">
-						<td>Joining <a href="/cancel/${event.id}">Cancel</a></td>
-					</c:if>
-					<c:if test="${!event.users.contains(currentUser) }">
-						<td><a href="/join/${event.id}">Join</a></td>
-					</c:if>
-    			</c:if>
-			</tr>
-		</c:if>
-		</c:forEach>
-	</table>
-	
-	<h3>Here are some of the events in other states: </h3>
-	<table>
-		<tr>
-			<th>Name</th>
-			<th>Date</th>
-			<th>Location</th>
-			<th>Host</th>
-			<th>Action</th>
-		</tr>
-		<c:forEach var = "event" items = "${events }">
-			<c:if test = "${!currentUser.location.equals(event.location) }">
-				<tr>
-					<td><a href = "/events/${event.id}">${event.name }</a></td>
-					<th><fmt:formatDate dateStyle = "long" type = "date" value = "${event.date }"/></th>
-					<th>${event.location }</th>
-					<th>${event.host.firstname }</th>
-					<c:if test="${event.users.contains(currentUser) }">
-						<td>Joining <a href="/cancel/${event.id}">Cancel</a></td>
-					</c:if>
-					<c:if test="${!event.users.contains(currentUser) }">
-						<td><a href="/join/${event.id}">Join</a></td>
-					</c:if>
-				</tr>
-			</c:if>	
-		</c:forEach>
-	</table>
-	
-	
-	<form:form method="POST" action="/addevent" modelAttribute="event">
-		<form:hidden path="host" value = "${currentUser.id }"/>
-		<h1>New Event</h1>
-		
-		<p>
-		    <form:label path="name">Name:
-		    <form:errors path="name"/>
-			 <form:input path="name"/>
-		    </form:label>
-	    </p>
-	    
-	    <p>
+    <div class = "formcontainer">
+    <!-- NEW EVENT FORM -->
+	    <div id="Addnew" class="w3-container menu w3-padding-32 w3-white">
+	    <form:form method="POST" action="/addevent" modelAttribute="event">
+	    	<form:hidden path="host" value = "${currentUser.id }"/>
+		      <h1><b>New Event</b></h1>
+		      <p class="w3-text-grey">
+		      	<form:label path="name">Name:
+		    	<form:errors path="name"/>
+			 	<form:input path="name"/>
+		    	</form:label>
+		      </p>
+		      <p class="w3-text-grey">
 		    <form:label path="date">Date:
 		    <form:errors path="date"/>
 		    <form:input path="date" type="date"/></form:label>
-		</p>
-		
-       	<p>
-       	<form:label path = "state">Location:</form:label>
-       	<input type = "text" placeholder="City">
-        	<select name = "state">
+		      </p>
+		      
+		      		      <p class="w3-text-grey">
+		      	<form:label path="description">Description:
+		    	<form:errors path="description"/>
+			 	<form:input path="description"/>
+		    	</form:label>
+		      </p>
+		      
+		      	<p class="w3-text-grey">
+       	    <form:label path="location">City:</form:label>
+            <form:input path="location" class="shortinput"/>
+            </p>
+            
+            <p class="w3-text-grey">
+            <form:label path = "state">State:</form:label>
+        	<form:select path = "state">
         		<option value="AL">Alabama</option>
 				<option value="AK">Alaska</option>
 				<option value="AZ">Arizona</option>
@@ -259,11 +214,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Amatic SC", sans-serif}
 				<option value="WV">West Virginia</option>
 				<option value="WI">Wisconsin</option>
 				<option value="WY">Wyoming</option>
-        	</select>
-       	</p>
+        	</form:select>
+        	</p>
+
 	    
 	    <input type="submit" value="Create"/>
-	</form:form>
+		      <hr>
+		</form:form>
+	</div>
+
+    </div><br>
+
+  </div>
+</div>
+
+
 </body>
 <script>
 function openMenu(evt, menuName) {

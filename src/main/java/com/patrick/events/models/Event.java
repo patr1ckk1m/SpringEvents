@@ -1,7 +1,6 @@
 package com.patrick.events.models;
 
 
-
 import java.util.Date;
 import java.util.List;
 
