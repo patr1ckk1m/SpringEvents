@@ -8,3 +8,7 @@ This web application has the following features:
   <li>Message board for user communication</li>
   <li>MySQL database connectivity</li>
 </ul>
+
+<br>
+Login portion defaults to a guest user already registered in database.
+Use this default guest user to access home page, or register with your own credentials.
